@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -99,9 +101,21 @@ class User implements UserInterface
      */
     private $isVerified = false;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Tchat::class, mappedBy="sender", orphanRemoval=true)
+     */
+    private $senders;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Tchat::class, mappedBy="receiver", orphanRemoval=true)
+     */
+    private $receivers;
+
     public function __construct()
     {
         $this->creation = new \Datetime();
+        $this->senders = new ArrayCollection();
+        $this->receivers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -233,6 +247,66 @@ class User implements UserInterface
     public function setIsVerified(bool $isVerified): self
     {
         $this->isVerified = $isVerified;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tchat[]
+     */
+    public function getSenders(): Collection
+    {
+        return $this->senders;
+    }
+
+    public function addSender(Tchat $sender): self
+    {
+        if (!$this->senders->contains($sender)) {
+            $this->senders[] = $sender;
+            $sender->setSender($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSender(Tchat $sender): self
+    {
+        if ($this->senders->removeElement($sender)) {
+            // set the owning side to null (unless already changed)
+            if ($sender->getSender() === $this) {
+                $sender->setSender(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Tchat[]
+     */
+    public function getReceivers(): Collection
+    {
+        return $this->receivers;
+    }
+
+    public function addReceiver(Tchat $receiver): self
+    {
+        if (!$this->receivers->contains($receiver)) {
+            $this->receivers[] = $receiver;
+            $receiver->setReceiver($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReceiver(Tchat $receiver): self
+    {
+        if ($this->receivers->removeElement($receiver)) {
+            // set the owning side to null (unless already changed)
+            if ($receiver->getReceiver() === $this) {
+                $receiver->setReceiver(null);
+            }
+        }
 
         return $this;
     }

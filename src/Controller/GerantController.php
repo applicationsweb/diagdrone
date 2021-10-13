@@ -103,7 +103,7 @@ class GerantController extends AbstractController
      */
     public function delete(Request $request, User $user, Securizer $securizer): Response
     {
-        // Interdit de modifier un super supprimer
+        // Interdit de supprimer un super administrateur
         if($securizer->isGranted($user, 'ROLE_SUPER_ADMIN')) {
             throw new \Exception("Vous n'avez pas le droit d'accéder à cette ressource.");
         }

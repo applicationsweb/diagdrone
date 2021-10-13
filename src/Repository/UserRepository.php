@@ -36,6 +36,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->_em->flush();
     }
 
+    // Récupère les gérants en fonction d'une liste de rôles + renvoi le total si demandé
     public function UsersAllForRole($roles, $user_id, $count=null) {
         $b = $this->createQueryBuilder('u');
 
@@ -54,5 +55,27 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         } else {
             return $b->getQuery()->getResult();
         }
+    }
+
+    // Récupère tous les utilisateurs
+    public function findUsers() {
+        $b = $this->createQueryBuilder('u')
+                ->where("u.roles LIKE '%ROLE_USER%'");
+        return $b->getQuery()->getResult();
+    }
+
+    // Récupère tous les administrateurs
+    public function findAdministrators() {
+        $b = $this->createQueryBuilder('u')
+                ->where("u.roles LIKE '%ROLE_ADMIN%'");
+        return $b->getQuery()->getResult();
+    }
+
+    // Compte le nombre total d'utilisateurs
+    public function countTotalUsers() {
+        $b = $this->createQueryBuilder('u')
+                ->addSelect('COUNT(u.id) as total')
+                ->where("u.roles LIKE '%ROLE_USER%'");
+        return $b->getQuery()->getSingleResult();
     }
 }

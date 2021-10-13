@@ -20,5 +20,17 @@
             </div>
         </a>
     </div>
+    <div class="col-12 col-sm-6 col-md-3">
+        <a href="{{ path('utilisateur_index') }}" title="Consulter les utilisateurs" class="text-dark">
+            <div class="info-box">
+                <span class="info-box-icon bg-info elevation-1"><i class="nav-icon fas fa-users"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Utilisateurs</span>
+                    <span class="info-box-number">{{ utilisateurs }}</span>
+                </div>
+            </div>
+        </a>
+    </div>
 </div>
 {% endblock %}

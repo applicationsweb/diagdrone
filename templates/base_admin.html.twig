@@ -65,10 +65,8 @@
                                 Super administrateur
                             {% elseif is_granted('ROLE_ADMIN') %}
                                 Administrateur
-                            {% elseif is_granted('ROLE_MANAGER') %}
-                                Manageur
                             {% else %}
-                                Utilisateur
+                                Manageur
                             {% endif %}
                         </span>
                     </div>
@@ -101,6 +99,14 @@
                                 <i class="nav-icon fas fa-cog"></i>
                                 <p>
                                     Gérants
+                                </p>
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ path('utilisateur_index') }}" class="nav-link">
+                                <i class="nav-icon fas fa-users"></i>
+                                <p>
+                                    Utilisateurs
                                 </p>
                             </a>
                         </li>

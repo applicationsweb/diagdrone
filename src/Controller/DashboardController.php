@@ -26,8 +26,11 @@ class DashboardController extends AbstractController
             $users = $userRepository->UsersAllForRole(['ROLE_MANAGER'], $user_id, 1); 
         }
 
+        $utilisateurs = $userRepository->countTotalUsers(); 
+
         return $this->render('dashboard/index.html.twig', [
-            'gerants' => $users["total"]
+            'gerants' => $users["total"],
+            'utilisateurs' => $utilisateurs['total']
         ]);
     }
 }

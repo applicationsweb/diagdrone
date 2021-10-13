@@ -21,118 +21,84 @@
 
 <div class="alert alert-info alert-dismissible">
     <div class="container">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-        <h5><i class="icon fas fa-info"></i> A faire !</h5>
+        <h5><i class="icon fas fa-info"></i> Projet DiagDrone</h5>
         <ul>
-            <li>une version SF5 Starter avec WebPack</li>
-            <li>autres...</li>
+            <li>Avec Symfony 5 vous devez réaliser un tchat.(type Messenger de Facebook)</li>
+            <li>L’administrateur du site pourra discuter en tchat en temps réel avec des personnes inscrites.</li>
+            <li>Un historique des conversations est obligatoire.</li>
+            <li>Les utilisateurs ne peuvent pas discuter entre eux.</li>
         </ul>
     </div>
 </div>
 
 <div class="container">
     <div class="row">
-        <div class="col-12">
-            <div class="card">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-spinner mr-2"></i>
-                        Installation du projet
-                    </h3>
-                </div>
-                <div class="card-body">
-                    1. Clôner le projet<br>
-                    <kbd>$ git clone https://github.com/applicationsweb/SF5_STARTER.git</kbd>
-                    <br><br>
-
-                    2. Installer le projet<br>
-                    <kbd>$ composer update</kbd>
-                    <br><br>
-
-                    3. Configurer le projet<br>
-                    <pre><code>Dans le fichier .env :
-
-#Configurer le serveur de mail
-MAILER_DSN=smtp://login:password@hostname:port
-
-#Configurer la base de données
-DATABASE_URL=mysql://root:@127.0.0.1:3306/sf5starter?serverVersion=5.7
-</code></pre>
-                    4. Créer la base de données<br>
-                    <kbd>$ php bin/console doctrine:database:create</kbd>
-                    <br><br>
-
-                    5. Générer les tables<br>
-                    <kbd>$ php bin/console doctrine:migrations:migrate</kbd>
-                    <br><br>
-
-                    6. Générer de faux comptes<br>
-                    <kbd>$ php bin/console doctrine:fixtures:load</kbd>
-                    <br><br>
-
-                    7. Démarrer le projet<br>
-                    <kbd>$ symfony server:start</kbd>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_USER') %}
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-tasks mr-2"></i>
-                        Côté Front-office
+                        <i class="fas fa-users mr-2"></i>
+                        Liste des {% if is_granted('ROLE_ADMIN') %}utilisateurs{% else %}administrateurs{% endif %} disponibles
                     </h3>
                 </div>
-                <div class="card-body">
-                    <ul>
-                        <li>Thème AdminLTE 3 : le thème est installé dans le projet afin de faciliter les développements : <a href="https://adminlte.io/themes/dev/AdminLTE/index.html" title="Admin LTE3">http://127.0.0.1:8000/adminLTE/</a></li>
-                        <li>FontAwesome</li>
-                        <li>jQuery</li>
-                        <li>Bootstrap4</li>
-                        <li>Page de connexion : <a href="{{ path('app_login') }}" title="Connexion">Connexion</a></li>
-                        <li>Page d'inscription (par défaut un rôle ROLE_USER) (confirmation par e-mail avec symfonycasts/verify-email-bundle) : <a href="{{ path('app_register') }}" title="Inscription">Inscription</a></li>
-                        <li>Page de profil utilisateur : <a href="{{ path('account_profile') }}" title="Profil">Profil</a></li>
-                        <li>Page de modification du mot de passe : <a href="{{ path('account_password') }}" title="Modifier le mot de passe">Modifier le mot de passe</a></li>
-                        <li>Pages pour la gestion du mot de passe oublié (bundles symfonycasts/reset-password-bundle et symfonycasts/verify-email-bundle) : <a href="{{ path('app_forgot_password_request') }}" title="Mot de passe oublié">Mot de passe oublié</a></li>
-                    </ul>
+                <div class="card-body" id="contact">
+                    <div class="list-group">
+                        {% for user in users %}
+                            <button id="{{ user.id }}" type="button" class="list-group-item list-group-item-action">
+                                {{ user.prenom|capitalize~' '~user.nom|capitalize }}
+                                {% set unread = unread_messages[loop.index0]['unread'] %}
+                                {% if unread != "0" %}
+                                    <span class="badge badge-primary float-right">
+                                    {{ unread }} {% if unread == "1" %}nouveau message{% else %}nouveaux messages{% endif %}
+                                    </span>
+                                {% endif %}
+                            </button>
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
         </div>  
-         
+            
         <div class="col-md-6">
             <div class="card">
                 <div class="card-header">
                     <h3 class="card-title">
-                        <i class="fas fa-tasks mr-2"></i>
-                        Côté Back-office
+                        <i class="fas fa-comment-dots mr-2"></i>
+                        Liste des communications
                     </h3>
                 </div>
                 <div class="card-body">
-                    <li>Thème AdminLTE 3 : le thème est installé dans le projet afin de faciliter les développements : <a href="https://adminlte.io/themes/dev/AdminLTE/index.html" title="Admin LTE3">http://127.0.0.1:8000/adminLTE/</a></li>
-                    <li>3 rôles : Manageur (ROLE_MANAGER) < Administrateur (ROLE_ADMIN) < Super administrateur (ROLE_SUPER_ADMINISTRATEUR)</li>
-                    <li>FontAwesome</li>
-                    <li>IonIcons</li>
-                    <li>ICheck</li>
-                    <li>Overlay Scrollbars</li>
-                    <li>jQuery</li>
-                    <li>jQuery UI</li>
-                    <li>Bootstrap4</li>
-                    <li>Select2</li>
-                    <li>Datatables</li>
-                    <li>FosJsRoutingBundle : utlisation des routes dans les sources Javascript</li>
-                    <li>DoctrineFixturesBundle + FakerBundle : génération de fausses données</li>
-                    <li>Symfony Mailer</li>
-                    <li>SwiftMailer</li>
-                    <li>Page de profil</li>
-                    <li>Page de modification du mot de passe</li>
-                    <li>Déconnection</li>
-                    <li>Module Gérants : visualisation/ajout/modification/suppression d'un gérant</li>
+                    <div id="alert-communication" class="alert alert-primary" role="alert">
+                    Aucune communication active ! Pour démarrer une communication avec l'un de nos 
+                    {% if is_granted('ROLE_ADMIN') %}utilisateurs{% else %}administrateurs{% endif %}, merci de cliquer sur l'{% if is_granted('ROLE_ADMIN') %}utilisateur{% else %}administrateur{% endif %} de votre choix dans la 
+                    liste de gauche.
+                    </div>
+                    <div id="communication" class="card d-none" data-receiver="false">
+                        <h5 class="card-header bg-primary"></h5>
+                        <div class="card-body" style="height:300px;overflow-y: scroll;">
+                            
+                        </div>
+                        <div class="card-footer">
+                            <div class="input-group">
+                                <input id="message" type="text" class="form-control" placeholder="Votre message..." required aria-label="Votre message..." aria-describedby="basic-addon2">
+                                <div class="input-group-append">
+                                    <button id="envoyer" class="btn btn-outline-primary" type="button">Envoyer</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>                
+        </div>
+        {% else %}
+        <div class="col mb-3">
+            <div class="card" style="p-4">
+                <h4 class="text-center">Vous n'avez pas les droits nécessaires pour accéder au tchat !</h4>
+                <p class="text-muted text-center">Le tchat est réservé uniquement aux utilisateurs (ROLE_ADMIN) et administrateurs (ROLE_ADMIN)</p>
+            </div>
+        </div>
+        {% endif %}               
     </div>
 </div>
 
@@ -143,4 +109,80 @@ DATABASE_URL=mysql://root:@127.0.0.1:3306/sf5starter?serverVersion=5.7
         <b>Version</b> 1.0.0
     </div>
 </footer>
+{% endblock %}
+
+{% block javascripts %}
+{{ parent() }}
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+    timeout();
+
+    // Ouverture d'une conversation : Appel AJAX
+    $('body').on('click', '#contact .list-group-item', function(e) {
+        e.preventDefault();
+        $('#message').val('');
+        var name = $(this).html();
+        var id = $(this).attr('id');
+        $.ajax({
+            url: Routing.generate('front_open_tchat'),
+            data: { id: id },
+            method: "POST",
+            success: function(data) {
+                $('#alert-communication').hide();
+                $('#communication h5').html('Communication avec '+name);
+                $('#communication').attr('data-receiver', id);
+                $('#communication .card-body').html(data);
+                $('#communication').removeClass('d-none');
+                $('button[id='+id+'] .badge').remove();
+            }
+        });
+    });
+
+    // Envoi d'un nouveau message : Appel AJAX
+    $('body').on('click', '#envoyer', function(e) {
+        e.preventDefault();
+        var message = $('#message').val();
+        var receiver = $('#communication').attr('data-receiver');
+        if(message != '') {
+            $.ajax({
+                url: Routing.generate('front_send_message'),
+                data: { message: encodeURIComponent(message), receiver: receiver },
+                method: "POST",
+                success: function(data) {
+                    if(!data) {
+                        alert('Un problème est survenu. Merci de réessayer !');
+                    } else {
+                        $('#message').val('');
+                        $('#communication .card-body').append(data);
+                    }
+                }
+            });
+        }
+    });
+
+    // Récupère les messages envoyés en boucle
+    function timeout() {
+        var sender = $('#communication').attr('data-receiver');
+
+        if(sender != 'false') {
+            setTimeout(function() { 
+                $.ajax({
+                    url: Routing.generate('front_check_message'),
+                    data: { sender: sender },
+                    method: "POST",
+                    success: function(data) {
+                        $('#communication .card-body').append(data);
+                    }
+                });
+                timeout();
+            }, 4000);
+        } else {
+            setTimeout(function() { 
+                timeout();
+            }, 4000);
+        }
+    }
+});
+</script>
 {% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base_admin.html.twig' %}
+
+{% block title %}Utilisateurs{% endblock %}
+{% block breadcrumb_title %}<i class="nav-icon fas fa-users mr-2"></i>Utilisateurs{% endblock %}
+{% block breadcrumb_content %}
+<li class="breadcrumb-item"><a href="{{ path('utilisateur_index') }}" title="Utilisateurs">Utilisateurs</a></li>
+<li class="breadcrumb-item active">Modifier</li>
+{% endblock %}
+
+{% block body %}
+{{ include('utilisateur/_form.html.twig') }}
+{% endblock %}

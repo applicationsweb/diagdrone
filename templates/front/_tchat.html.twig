@@ -1,0 +1,12 @@
+{% if messages is empty %}
+    Aucun message ! Engagez une conversation
+{% else %}
+    {% for m in messages %}
+        <div class="w-100 clearfix">
+            <div class="mb-2 rounded p-1 {% if m.sender.id == app.user.id %}float-right bg-info{% else %}float-left bg-secondary{% endif %}" style="max-width:50%;">
+                <span class="font-italic float-right date-message" style="font-size:13px;">{{ m.created|date('d/m/Y à H:i:s') }}</span><br>
+                {{ m.message }}
+            </div>
+        </div>
+    {% endfor %}
+{% endif %}
