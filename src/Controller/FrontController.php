@@ -58,7 +58,7 @@ class FrontController extends AbstractController
                 $messages = $tchatRepository->findCommunicationByReceiverAndSender(intval($user_id), $this->getUser()->getId());
                 $manager = $this->getDoctrine()->getManager();
                 foreach($messages as $message) {
-                    if($message->getSender() == $this->getUser()) {
+                    if($message->getReceiver() == $this->getUser()) {
                         $message->setIsRead(1);
                         $manager->flush();
                     }
