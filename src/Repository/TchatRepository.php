@@ -43,7 +43,6 @@ class TchatRepository extends ServiceEntityRepository
             ->join('c.sender', 's')
             ->join('c.receiver', 'r')
             ->andWhere('s.id = :sender_id AND r.id = :receiver_id')
-            ->orWhere('s.id = :receiver_id AND r.id = :sender_id')
             ->setParameter('receiver_id', $receiver_id)
             ->setParameter('sender_id', $sender_id)
             ->andWhere('c.isRead = 0')
